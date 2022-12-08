@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
-import { updateDoc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Profile = () => {
   const auth = getAuth();
@@ -22,8 +23,22 @@ const Profile = () => {
     navigate('/');
   };
 
-  const onSubmit = () => {
-    console.log(123);
+  const onSubmit = async () => {
+    try {
+      if (auth.currentUser.displayName !== name) {
+        // Update the display name in firebase
+        await updateProfile(auth.currentUser, { displayName: name });
+
+        // Update in firestore DB
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+        await updateDoc(userRef, {
+          name,
+        });
+        toast.success('User updated successfully');
+      }
+    } catch (error) {
+      toast.error('Could not update profile details');
+    }
   };
 
   const onChange = (e) => {
