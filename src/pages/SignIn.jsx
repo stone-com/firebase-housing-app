@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg';
 import visibilityIcon from '../assets/svg/visibilityIcon.svg';
@@ -32,9 +33,10 @@ const SignIn = () => {
       // redirect to home page if sign in was successful
       if (userCredential.user) {
         navigate('/');
+        toast.success('Login successful!');
       }
     } catch (error) {
-      console.log(error);
+      toast.error('Bad User Credentials');
     }
   };
   return (
