@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
+import PrivateRoute from './components/PrivateRoute';
 import Explore from './pages/Explore';
 import Offers from './pages/Offers';
 import SignIn from './pages/SignIn';
@@ -16,7 +17,10 @@ function App() {
         <Routes>
           <Route path='/' element={<Explore />} />
           <Route path='/offers' element={<Offers />} />
-          <Route path='/profile' element={<Profile />} />
+          {/* Use PrivateRoute component to render profile only if logged in */}
+          <Route to='/profile' element={<PrivateRoute />}>
+            <Route path='/profile' element={<Profile />} />
+          </Route>
           <Route path='/sign-in' element={<SignIn />} />
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
