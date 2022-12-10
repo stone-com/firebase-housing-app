@@ -19,15 +19,15 @@ const Explore = () => {
               alt='Rent'
               className='exploreCategoryImg'
             />
-            <p className="exploreCategoryName">Places to rent</p>
+            <p className='exploreCategoryName'>Places to rent</p>
           </Link>
-          <Link to='/category/sell'>
+          <Link to='/category/sale'>
             <img
               src={sellCategoryImage}
-              alt='Rent'
+              alt='Sell'
               className='exploreCategoryImg'
             />
-            <p className="exploreCategoryName">Places to buy</p>
+            <p className='exploreCategoryName'>Places to buy</p>
           </Link>
         </div>
       </main>
