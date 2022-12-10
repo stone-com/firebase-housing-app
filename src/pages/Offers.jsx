@@ -1,4 +1,6 @@
 const Offers = () => {
-  return <h1>Offers</h1>;
-};
-export default Offers;
+  return (
+    <div>Offers</div>
+  )
+}
+export default Offers
