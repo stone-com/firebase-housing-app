@@ -34,7 +34,7 @@ function Offers() {
           where('offer', '==', true),
           orderBy('timestamp', 'desc'),
           limit(10)
-        );
+        )
 
         // Execute the query
         const querySnap = await getDocs(q);
