@@ -62,8 +62,34 @@ const CreateListing = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
   };
-  const onMutate = (e) => {};
+  const onMutate = (e) => {
+    // Set boolean variable based on target values. Will be used to update state
+    let boolean = null;
+    if (e.target.value === 'true') {
+      boolean = true;
+    }
+    if (e.target.value === 'false') {
+      boolean = false;
+    }
+
+    // Files (images)
+    if (e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        images: e.target.files,
+      }));
+    }
+    // Text/booleans/numbers
+    if (!e.target.files) {
+      // Set form data, if boolean is false then set to e.arget.value, else set to boolean value
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean ?? e.target.value,
+      }));
+    }
+  };
 
   if (loading) {
     return <Spinner />;
@@ -201,7 +227,7 @@ const CreateListing = () => {
             onChange={onMutate}
             required
           />
-
+          {/* If geolocation is not enabled, show manual lat and long inputs  */}
           {!geolocationEnabled && (
             <div className='formLatLng flex'>
               <div>
@@ -265,9 +291,10 @@ const CreateListing = () => {
               max='750000000'
               required
             />
+            {/* Toggle ' $/Month at the end of price input if type is set to rent */}
             {type === 'rent' && <p className='formPriceText'>$ / Month</p>}
           </div>
-
+          {/* Show discounted price input if offer is set to true */}
           {offer && (
             <>
               <label className='formLabel'>Discounted Price</label>
@@ -283,7 +310,7 @@ const CreateListing = () => {
               />
             </>
           )}
-
+          {/* Image upload */}
           <label className='formLabel'>Images</label>
           <p className='imagesInfo'>
             The first image will be the cover (max 6).
