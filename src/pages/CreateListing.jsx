@@ -6,6 +6,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -164,8 +165,28 @@ const CreateListing = () => {
       return;
     });
 
-    console.log(imgUrls);
+    // Create copy of formdata, adding in imgurls, geolocation, and timestamp
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+
+    // Delete the images and address fields from formDataCopy since we aren't using them in the DB, only the form
+    delete formDataCopy.images;
+    delete formDataCopy.address;
+    // Add location to formDataCopy if it exists
+    location && (formDataCopy.location = location);
+    // Delete the discounted price if there is no offer
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+
+    // Add the document to the listings collection
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
     setLoading(false);
+    toast.success('Listing saved!');
+    // Navigate to the new listing page that was just posted
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
   const onMutate = (e) => {
