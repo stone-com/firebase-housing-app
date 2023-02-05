@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../firebase.config';
 import Spinner from '../components/Spinner';
 import shareIcon from '../assets/svg/shareIcon.svg';
-
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +40,20 @@ const Listing = () => {
   }
   return (
     <main>
-      {/* Slider Goes Here */}
+      <Swiper slidesPerView={1} pagination={{ clickable: true }}>
+        {listing.imgUrls.map((url, index) => (
+          <SwiperSlide key={index}>
+            <div
+              style={{
+                background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                backgroundSize: 'cover',
+                height: '50vw',
+              }}
+              className='swiperSlideDiv'
+            ></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
       {/* When clicking the div/image, copy the url to clipboard, then set ShareLinkCopied to true then back to false after 2 seconds, to trigger a message notifying the link was copied */}
       <div
         className='shareIconDiv'
