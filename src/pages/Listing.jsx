@@ -29,6 +29,24 @@ const Listing = () => {
 
     fetchListing();
   }, [navigate, params.listingId]);
-  return <div>LISTING</div>;
+  return (
+    <main>
+      {/* Slider Goes Here */}
+      {/* When clicking the div/image, copy the url to clipboard, then set ShareLinkCopied to true then back to false after 2 seconds, to trigger a message notifying the link was copied */}
+      <div
+        className='shareIconDiv'
+        onClick={() => {
+          navigator.clipboard.writeText(window.location.href);
+          setShareLinkCopied(true);
+          setTimeout(() => {
+            setShareLinkCopied(false);
+          }, 2000);
+        }}
+      >
+        <img src={shareIcon} alt='' />
+      </div>
+      {shareLinkCopied && <p className='linkCopied'>Link Copied</p>}
+    </main>
+  );
 };
 export default Listing;
