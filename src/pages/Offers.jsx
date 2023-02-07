@@ -34,10 +34,13 @@ function Offers() {
           where('offer', '==', true),
           orderBy('timestamp', 'desc'),
           limit(10)
-        )
+        );
 
         // Execute the query
         const querySnap = await getDocs(q);
+
+        const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+        setLastFetchedListing(lastVisible);
         // Initialize an empty array for listings
         const listings = [];
 
@@ -60,6 +63,46 @@ function Offers() {
     fetchListings();
   }, []);
 
+  // pagination / Load More
+  const onFetchMoreListings = async () => {
+    try {
+      // Get reference
+      const listingsRef = collection(db, 'listings');
+
+      // Create a query
+      const q = query(
+        listingsRef,
+        where('offer', '==', true),
+        orderBy('timestamp', 'desc'),
+        startAfter(lastFetchedListing),
+        limit(10)
+      );
+
+      // Execute the query
+      const querySnap = await getDocs(q);
+
+      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+      setLastFetchedListing(lastVisible);
+
+      // Initialize an empty array for listings
+      const listings = [];
+
+      // Loop through the query snap and push ID and data for each doc to listings array
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      // Add the 10 new listings fetched to the end of the current listings array
+      setListings((prev) => [...prev, ...listings]);
+      setLoading(false);
+    } catch (error) {
+      toast.error('Could not fetch listings!');
+      console.log(error);
+    }
+  };
+
   return (
     <div className='category'>
       <header className='pageHeader'>Offers</header>
@@ -78,6 +121,14 @@ function Offers() {
               ))}
             </ul>
           </main>
+          <br />
+          <br />
+          {/* Button to call onFetchMoreListings, pagination */}
+          {lastFetchedListing && (
+            <p className='loadMore' onClick={onFetchMoreListings}>
+              Load More
+            </p>
+          )}
         </>
       ) : (
         <p>There are no current offers! Check back later</p>
