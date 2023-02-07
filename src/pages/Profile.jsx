@@ -91,9 +91,12 @@ const Profile = () => {
         (listing) => listing.id !== listingId
       );
       setListings(updatedListings);
-      toast.success('Listing Deleted')
+      toast.success('Listing Deleted');
     }
   };
+
+  const onEdit = (listingId) => navigate(`/edit-listing/${listingId}`);
+
   return (
     <div className='profile'>
       <header className='profileHeader'>
@@ -151,6 +154,7 @@ const Profile = () => {
                   listing={listing.data}
                   id={listing.id}
                   onDelete={() => onDelete(listing.id)}
+                  onEdit={() => onEdit(listing.id)}
                 />
               ))}
             </ul>
